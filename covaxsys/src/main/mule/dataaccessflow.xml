@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="GetUserFromDB" doc:id="84d413b1-558a-4135-ba4d-72e01a75e5e2" >
+		<db:select doc:name="Select" doc:id="fc02a753-e0b4-402d-a736-fb678197bc72" config-ref="Database_Config">
+			<db:sql ><![CDATA[SELECT * FROM users]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="0ca5e177-b5cc-4042-8d5b-3a3334702c62">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map(item,index) ->    {
+	"firstName": item.firstName,
+	"lastName": item.lastName,
+	"hcn": item.hcn,
+	"dob": item.dob,
+	"email": item.email,
+	"address": item.address,
+	"address2": item.address2,
+	"postalCode": item.postalCode,
+	"city": item.city,
+	"country": item.country,
+	"serviceType": item.serviceType,
+	"location": item.location,
+	"dateSlot": item.dateSlot,
+	"timeSlot": item.timeSlot
+}
+
+
+
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="PostUserDB" doc:id="cca0e208-30fa-4c83-8d2c-26f76e90c26f" >
+		<db:insert doc:name="Insert" doc:id="9892af8b-32fa-4f06-b6fa-d28972d46b24" config-ref="Database_Config">
+			<db:sql ><![CDATA[INSERT INTO users(userid,firstName,lastName,hcn,dob,email,address,address2,postalCode,city,country,serviceType,location,dateSlot,timeSlot) VALUES (:userid,:firstName,:lastName,:hcn,:dob,:email,:address,:address2,:postalCode,:city,:country,:serviceType,:location,:dateSlot,:timeSlot)]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+   	  "userid": uuid(),
+      "firstName": payload.firstName default "",
+      "lastName":payload.lastName default "",
+      "hcn":payload.hcn default "",
+      "dob":payload.dob default "",
+      "email":payload.email default "",
+      "address":payload.address default "",
+      "address2":payload.address2 default "",
+      "postalCode":payload.postalCode default "",
+      "city":payload.city default "",
+      "country":payload.country default "",
+      "serviceType":payload.serviceType default "",
+      "location":payload.location default "",
+      "dateSlot":payload.dateSlot default "",
+      "timeSlot":payload.timeSlot default ""
+   }]]]></db:input-parameters>
+		</db:insert>
+		<ee:transform doc:name="Transform Message" doc:id="22a7d6e6-bba7-41c0-b52a-da11e2aa5d75" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Status": "Records posted Successfully"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="GetUserByID" doc:id="4253df80-0da2-443e-969e-5acf2af29e07" >
+		<set-variable value="#[payload.attributes.uriParams.userId]" doc:name="Set UserID" doc:id="1472668a-64c5-441c-a720-f4a95f4557e1" variableName="UserId" />
+		<ee:transform doc:name="Transform Message" doc:id="a87a0d90-39e2-4453-9fc0-7d88d803c831" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

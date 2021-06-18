@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "hcn": {
+      "type": "string"
+    },
+    "dob": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "address": {
+      "type": "string"
+    },
+    "address2": {
+      "type": "string"
+    },
+    "postalCode": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string"
+    },
+    "serviceType": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "dateSlot": {
+      "type": "string"
+    },
+    "timeSlot": {
+      "type": "string"
+    }
+  },
+  "required": [
+]
+}

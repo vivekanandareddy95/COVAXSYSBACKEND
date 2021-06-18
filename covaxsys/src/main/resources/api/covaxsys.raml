@@ -1,0 +1,52 @@
+#%RAML 1.0
+title: Uptime Cloud SAPI
+baseUri: entsys/covaxsys/api/v1
+protocols:
+  - HTTP
+description: |
+  This API is used to synchronize users data with database
+
+types:
+    PostUsersRequestType: !include /datatypes/PostUsersRequest.schema.json
+    PostUsersResponseType: !include /datatypes/PostUsersResponse.schema.json
+    GetUsersResponseType: !include datatypes/GetUsersResponse.schema.json    
+
+
+/users:
+  post:
+    displayName: Post Users Data
+    description: Creation of new shopping.
+    body:
+      application/json:
+        type: PostUsersRequestType
+        example: !include examples/PostShoppingRequest.json
+        
+    responses:
+      201:          
+        body:
+          application/json:
+            type: PostUsersResponseType
+            example: !include examples/PostShoppingResponse.json
+  get:
+    displayName: getWagons    
+    body: {}
+    responses:
+      200:
+        body:
+          application/json:
+            type: GetUsersResponseType             
+            example: !include examples/GetUsersResponse.json            
+/users/{userId}:
+  uriParameters:
+    userId:
+      example: "W56B"
+      type: string               
+  get:
+    displayName: getWagons    
+    body: {}
+    responses:
+      200:
+        body:
+          application/json:
+            type: GetUsersResponseType             
+            example: !include examples/GetUsersResponse.json
